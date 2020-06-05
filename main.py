@@ -15,6 +15,7 @@ EPOCHS_COUNT = 200
 LEARNING_RATE = 0.0001
 BATCH_SIZE = 32
 KFOLD_PARTITIONS_COUNT = 5
+FAKE_TO_REAL_RATIO = 1.0/20.0
 TRAINING_PARALLEL_JOBS_COUNT = -1 # -1 means maximum
 
 
@@ -71,7 +72,7 @@ if __name__ == "__main__":
 	print("Creating classifier")
 	classifier = NeuralNetClassifier(network.Network, max_epochs=EPOCHS_COUNT, lr=LEARNING_RATE,
 									 train_split=None, criterion=criterion, optimizer=optimizer,
-									 batch_size=BATCH_SIZE, criterion__pos_weight=torch.tensor([1.0/20.0, 1.0]))
+									 batch_size=BATCH_SIZE, criterion__pos_weight=torch.tensor([FAKE_TO_REAL_RATIO, 1.0]))
 	print("Training")
 	predictions = cross_val_predict(classifier, all_job_posting_data, all_job_posting_targets,
 									cv=KFOLD_PARTITIONS_COUNT, verbose=1, n_jobs=TRAINING_PARALLEL_JOBS_COUNT)
