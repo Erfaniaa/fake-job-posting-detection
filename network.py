@@ -3,7 +3,7 @@ from torch import nn, optim
 from torch.nn import functional as F
 
 NETWORK_INPUT_SIZE = 342
-NETWORK_OUTPUT_SIZE = 1
+NETWORK_OUTPUT_SIZE = 2
 
 
 class Network(nn.Module):
@@ -16,8 +16,7 @@ class Network(nn.Module):
 		self.fc5 = nn.Linear(32, 16)
 		self.fc6 = nn.Linear(16, 8)
 		self.fc7 = nn.Linear(8, 4)
-		self.fc8 = nn.Linear(4, 2)
-		self.fc9 = nn.Linear(2, output_size)
+		self.fc8 = nn.Linear(4, output_size)
 
 	def forward(self, x):
 		x = self.fc1(x)
@@ -35,9 +34,6 @@ class Network(nn.Module):
 		x = self.fc7(x)
 		x = F.relu(x)
 		x = self.fc8(x)
-		x = F.relu(x)
-		x = self.fc9(x)
-		x = torch.tanh(x)
 		return x
 
 

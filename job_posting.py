@@ -39,11 +39,11 @@ class JobPosting:
 				self.has_company_logo, self.has_question, *self.employment_type, *self.required_experience,
 				*self.required_education, *self.industry, *self.function]
 
-	def get_target(self):
+	def get_target_list(self):
 		if int(self.fraudulent) == 0:
-			return -1
+			return [1.0, 0.0]
 		else:
-			return 1
+			return [0.0, 1.0]
 
 	def get_target(self):
 		return int(self.fraudulent)
