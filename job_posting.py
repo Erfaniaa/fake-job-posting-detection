@@ -39,11 +39,11 @@ class JobPosting:
 				self.has_company_logo, self.has_question, *self.employment_type, *self.required_experience,
 				*self.required_education, *self.industry, *self.function]
 
-	def get_target_list(self):
+	def get_target(self):
 		if int(self.fraudulent) == 0:
-			return [1, -1]
+			return 0
 		else:
-			return [-1, 1]
+			return 1
 
 	def get_target(self):
 		return int(self.fraudulent)
@@ -52,7 +52,7 @@ class JobPosting:
 		return torch.tensor(self.get_data_list())
 
 
-class JobPostingsDataset:
+class JobPostingsDataset(torch.utils.data.Dataset):
 	def __init__(self, job_postings_list=[]):
 		self.job_postings_list = job_postings_list
 		self.vectorized_job_postings_dict = {}
@@ -115,16 +115,6 @@ class JobPostingsDataset:
 		symbols = re.findall("(?::|;|=)(?:-)?(?:\)|\(|D|P)", text)
 		text = (re.sub("[\W]+", " ", text.lower()) + " ".join(symbols).replace("-", ""))
 		return text
-
-	def get_target_list(self, index):
-		if self.__getitem__(index).fraudulent == 0:
-			return [1, -1]
-		else:
-			return [-1, 1]
-
-	def get_data_list(self, index):
-		vectorized_job_posting = self.__getitem__(index)
-		return vectorized_job_posting.get_list()
 
 	def __getitem__(self, index):
 		if index in self.vectorized_job_postings_dict:
