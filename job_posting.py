@@ -41,7 +41,7 @@ class JobPosting:
 
 	def get_target(self):
 		if int(self.fraudulent) == 0:
-			return 0
+			return -1
 		else:
 			return 1
 

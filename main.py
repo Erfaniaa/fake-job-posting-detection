@@ -11,7 +11,7 @@ from sklearn.model_selection import cross_val_predict, cross_val_score
 
 CSV_FILENAME = "dataset.csv"
 CSV_FILE_DELIMITER = ","
-EPOCHS_COUNT = 50
+EPOCHS_COUNT = 20
 LEARNING_RATE = 0.00001
 KFOLD_PARTITIONS_COUNT = 5
 
@@ -20,7 +20,7 @@ def prepare_dataset():
 	global job_postings
 	global all_job_posting_data
 	global all_job_posting_targets
-	random.shuffle(job_postings)
+	# random.shuffle(job_postings)
 	job_postings = JobPostingsDataset(job_postings)
 	job_postings.prepare_all_text_vectorizers()
 	all_job_posting_data = torch.tensor([job_posting.get_data_list() for job_posting in job_postings]).float().to(device)
@@ -47,9 +47,8 @@ def initialize_network():
 	global optimizer
 	device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 	model = network.Network().to(device)
-	optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
-	for m in model._modules:
-		network.normal_init(model._modules[m], 0, 1)
+	# for m in model._modules:
+		# network.normal_init(model._modules[m], 0, 1)
 
 
 if __name__ == "__main__":
@@ -60,7 +59,7 @@ if __name__ == "__main__":
 	print("Preparing dataset")
 	prepare_dataset()
 	print("Creating classifier")
-	classifier = NeuralNetClassifier(network.Network, max_epochs=EPOCHS_COUNT, lr=LEARNING_RATE, train_split=None, criterion=torch.nn.BCELoss)
+	classifier = NeuralNetClassifier(network.Network, max_epochs=EPOCHS_COUNT, lr=LEARNING_RATE, train_split=None, criterion=torch.nn.MSELoss, optimizer=torch.optim.Adam)
 	print("Training")
-	accuracies = cross_val_score(classifier, all_job_posting_data, all_job_posting_targets, cv=KFOLD_PARTITIONS_COUNT)
-	print("K-Fold accuracies:", accuracies)
+	recalls = cross_val_score(classifier, all_job_posting_data, all_job_posting_targets, cv=KFOLD_PARTITIONS_COUNT, verbose=1, scoring="recall")
+	print("K-Fold cross validation recalls:", recalls)

@@ -37,7 +37,7 @@ class Network(nn.Module):
 		x = self.fc8(x)
 		x = F.relu(x)
 		x = self.fc9(x)
-		x = torch.sigmoid(x)
+		x = torch.tanh(x)
 		return x
 
 
