@@ -1,6 +1,6 @@
-# Fake Job Posting Prediction
+# Fake Job Posting Detection
 
-Detect fake job postings with deep learning
+Detecting fake job postings with deep learning
 
 ## Introduction
 
